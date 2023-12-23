@@ -179,124 +179,125 @@
     </div>
 
     <script>
-        var friendCount = 2; // Initial number of friends
+    var friendCount = 2; // Initial number of friends
 
-        function addFriendInput() {
-            friendCount++;
-            var friendContainer = document.getElementById('friendInputs');
+    function addFriendInput() {
+        friendCount++;
+        var friendContainer = document.getElementById('friendInputs');
 
-            var inputContainer = document.createElement('div');
-            inputContainer.className = 'input-container';
+        var inputContainer = document.createElement('div');
+        inputContainer.className = 'input-container';
 
-            var label = document.createElement('label');
-            label.htmlFor = 'friend' + friendCount;
-            label.innerText = 'Friend ' + friendCount + ':';
+        var label = document.createElement('label');
+        label.htmlFor = 'friend' + friendCount;
+        label.innerText = 'Friend ' + friendCount + ':';
 
-            var input = document.createElement('input');
-            input.type = 'text';
-            input.id = 'friend' + friendCount;
-            input.className = 'input';
-            input.placeholder = 'Enter message for Friend ' + friendCount;
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'friend' + friendCount;
+        input.className = 'input';
+        input.placeholder = 'Enter message for Friend ' + friendCount;
 
-            inputContainer.appendChild(label);
-            inputContainer.appendChild(input);
-            friendContainer.appendChild(inputContainer);
+        inputContainer.appendChild(label);
+        inputContainer.appendChild(input);
+        friendContainer.appendChild(inputContainer);
+    }
+
+    function persist() {
+        if (!window.localStorage)
+            return;
+
+        for (var i = 1; i <= friendCount; i++) {
+            var friendMessage = document.getElementById('friend' + i).value;
+            window.localStorage.setItem('friend' + i, friendMessage);
         }
+    }
 
-        function persist() {
-            if (!window.localStorage)
-                return;
+    function restore() {
+        if (!window.localStorage)
+            return;
 
-            for (var i = 1; i <= friendCount; i++) {
-                var friendMessage = document.getElementById('friend' + i).value;
-                window.localStorage.setItem('friend' + i, friendMessage);
+        for (var i = 1; i <= friendCount; i++) {
+            var friendMessage = window.localStorage.getItem('friend' + i);
+            if (friendMessage === null) {
+                friendMessage = '';
+            }
+            document.getElementById('friend' + i).value = friendMessage;
+        }
+    }
+
+    function reset() {
+        var result = document.getElementById('result');
+        result.classList.add('none');
+        result.classList.remove('error');
+    }
+
+    function error(text) {
+        var result = document.getElementById('result');
+        result.classList.remove('none');
+        result.classList.add('error');
+        result.innerText = text;
+    }
+
+    function success(messages) {
+        var result = document.getElementById('result');
+        result.classList.remove('none');
+        result.classList.remove('error');
+        result.innerHTML = '';
+
+        var table = document.createElement('table');
+        table.className = 'result-table';
+        result.appendChild(table);
+
+        for (var t = 0, T = messages.length; t < T; ++t) {
+            var message = messages[t];
+
+            var tr = document.createElement('tr');
+            tr.className = 'result-row';
+            table.appendChild(tr);
+
+            var tdName = document.createElement('td');
+            tdName.className = 'result-name';
+            tr.appendChild(tdName);
+
+            var tdLink = document.createElement('td');
+            tdLink.className = 'result-link';
+            tr.appendChild(tdLink);
+
+            var link = document.createElement('a');
+            tdLink.appendChild(link);
+
+            var key = String(_.random(0x0000, 0xFFFF));
+            var encryptedMessage = CryptoJS.AES.encrypt(message.message, key);
+
+            var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
+            var linkQueryString = '?name=' + encodeURIComponent(message.name) + '&key=' + encodeURIComponent(key) + '&message=' + encodeURIComponent(encryptedMessage);
+
+            tdName.innerText = message.name;
+
+            link.href = window.location.protocol + '//' + window.location.host + linkPath + linkQueryString;
+            link.target = '_blank';
+            link.innerText = link.href;
+        }
+    }
+
+    function generate(e) {
+        e.preventDefault();
+
+        var messages = [];
+
+        for (var i = 1; i <= friendCount; i++) {
+            var friendMessage = document.getElementById('friend' + i).value;
+            if (friendMessage.trim() !== '') {
+                messages.push({ name: 'Friend ' + i, message: friendMessage });
             }
         }
 
-        function restore() {
-            if (!window.localStorage)
-                return;
+        if (messages.length === 0)
+            return reset();
 
-            for (var i = 1; i <= friendCount; i++) {
-                var friendMessage = window.localStorage.getItem('friend' + i);
-                if (typeof friendMessage === 'undefined')
-                    friendMessage = '';
-                document.getElementById('friend' + i).value = friendMessage;
-            }
-        }
-
-        function reset() {
-            var result = document.getElementById('result');
-            result.classList.add('none');
-            result.classList.remove('error');
-        }
-
-        function error(text) {
-            var result = document.getElementById('result');
-            result.classList.remove('none');
-            result.classList.add('error');
-            result.innerText = text;
-        }
-
-        function success(messages) {
-            var result = document.getElementById('result');
-            result.classList.remove('none');
-            result.classList.remove('error');
-            result.innerHTML = '';
-
-            var table = document.createElement('table');
-            table.className = 'result-table';
-            result.appendChild(table);
-
-            for (var t = 0, T = messages.length; t < T; ++t) {
-                var message = messages[t];
-
-                var tr = document.createElement('tr');
-                tr.className = 'result-row';
-                table.appendChild(tr);
-
-                var tdName = document.createElement('td');
-                tdName.className = 'result-name';
-                tr.appendChild(tdName);
-
-                var tdLink = document.createElement('td');
-                tdLink.className = 'result-link';
-                tr.appendChild(tdLink);
-
-                var link = document.createElement('a');
-                tdLink.appendChild(link);
-
-                var key = String(_.random(0x0000, 0xFFFF));
-                var encryptedMessage = CryptoJS.AES.encrypt(message.message, key);
-
-                var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
-                var linkQueryString = '?name=' + encodeURIComponent(message.name) + '&key=' + encodeURIComponent(key) + '&message=' + encodeURIComponent(encryptedMessage);
-
-                tdName.innerText = message.name;
-
-                link.href = window.location.protocol + '//' + window.location.host + linkPath + linkQueryString;
-                link.target = '_blank';
-                link.innerText = link.href;
-            }
-        }
-
-        function generate(e) {
-            e.preventDefault();
-
-            var messages = [];
-
-            for (var i = 1; i <= friendCount; i++) {
-                var friendMessage = document.getElementById('friend' + i).value;
-                if (friendMessage.trim() !== '') {
-                    messages.push({ name: 'Friend ' + i, message: friendMessage });
-                }
-            }
-
-            if (messages.length === 0)
-                return reset();
-
-            success(messages);
-        }
+        success(messages);
+    }
 
     </script>
 
