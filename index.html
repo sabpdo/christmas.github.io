@@ -306,11 +306,9 @@
             var messages = [];
 
             for (var i = 1; i <= friendCount; i++) {
-                var friendName = document.getElementById('friendName' + i).value;
-                var friendMessage = document.getElementById('friendMessage' + i).value;
-
+                var friendMessage = document.getElementById('friend' + i).value;
                 if (friendMessage.trim() !== '') {
-                    messages.push({ name: friendName, message: friendMessage });
+                    messages.push({ name: 'Friend ' + i, message: friendMessage });
                 }
             }
 
@@ -319,6 +317,7 @@
 
             success(messages);
         }
+
     </script>
 
     <script>
