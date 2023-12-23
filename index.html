@@ -52,14 +52,17 @@
         .input-container {
             display: flex;
             flex-direction: column;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .input-container label {
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 18px;
+            color: #333;
         }
 
-        .input {
+        /* Styling for name input */
+        .name-input {
             display: block;
             align-self: stretch;
             width: 100%;
@@ -69,6 +72,21 @@
             padding: 15px;
             background-color: rgba(255, 255, 255, .7);
             outline: none;
+            height: 60px; /* Adjust this value as needed */
+        }
+
+        /* Styling for message input */
+        .message-input {
+            display: block;
+            align-self: stretch;
+            width: 100%;
+            flex: auto;
+            border: 10px solid #0CB50C;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, .7);
+            outline: none;
+            height: 150px; /* Adjust this value as needed */
         }
 
         .generate {
@@ -156,45 +174,7 @@
 
     
 
-    .input-container {
-        display: flex;
-        flex-direction: column;
-        margin-top: 20px;
-    }
 
-    .input-container label {
-        margin-bottom: 8px;
-        font-size: 18px;
-        color: #333;
-    }
-
-    /* Styling for name input */
-    .name-input {
-        display: block;
-        align-self: stretch;
-        width: 100%;
-        flex: auto;
-        border: 10px solid #0CB50C;
-        border-radius: 10px;
-        padding: 15px;
-        background-color: rgba(255, 255, 255, .7);
-        outline: none;
-        height: 60px; /* Adjust this value as needed */
-    }
-
-    /* Styling for message input */
-    .message-input {
-        display: block;
-        align-self: stretch;
-        width: 100%;
-        flex: auto;
-        border: 10px solid #0CB50C;
-        border-radius: 10px;
-        padding: 15px;
-        background-color: rgba(255, 255, 255, .7);
-        outline: none;
-        height: 150px; /* Adjust this value as needed */
-    }
 
 
         .generate:hover {
