@@ -99,9 +99,70 @@
         transition: background-color 0.3s;
     }
 
-    .add-friend:hover {
-        background-color: #088C08; /* Darker green color on hover */
+        .add-friend:hover {
+            background-color: #088C08; /* Darker green color on hover */
+        }
+
+        .input-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
     }
+
+    .input-container label {
+        margin-bottom: 8px;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .input {
+        display: block;
+        align-self: stretch;
+        width: 100%;
+        flex: auto;
+
+        border: 2px solid #3498db; /* Border color */
+        border-radius: 5px;
+        padding: 10px;
+
+        background-color: rgba(255, 255, 255, .9);
+        outline: none;
+        font-size: 16px;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+    .input:focus {
+        border-color: #e74c3c; /* Highlight color on focus */
+    }
+
+    .generate {
+        display: block;
+        margin-top: 20px;
+        flex: none;
+        height: 60px;
+        border: 2px solid #27ae60; /* Border color */
+        border-radius: 5px;
+        font-family: inherit;
+        font-size: 20px;
+        background-color: #2ecc71; /* Button color */
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .generate:hover {
+        background-color: #1e8449; /* Button color on hover */
+    }
+
+    .result {
+        margin-top: 20px;
+        flex: none;
+        border: 2px solid #e74c3c; /* Border color */
+        border-radius: 5px;
+        padding: 15px;
+        background: #fff;
+    }
+
 
 
         .generate:focus {
