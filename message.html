@@ -126,17 +126,15 @@
     </style>
 
     <script>
-        var queryString = _.chain(location.search.slice(1).split(/&/g))
-            .map(function (item) {
-                if (item) return item.split(/=/).map(function (str) {
-                    return decodeURIComponent(str);
-                });
-            })
-            .compact().object().value();
+        var queryString = location.search.slice(1);
+        var params = new URLSearchParams(queryString);
 
-        var name = queryString.name;
+        var name = params.get('name');
+        var key = params.get('key');
+        var encryptedMessage = params.get('message');
 
-        var message = CryptoJS.AES.decrypt(queryString.message, queryString.key).toString(CryptoJS.enc.Utf8);
+        var message = CryptoJS.AES.decrypt(encryptedMessage, key).toString(CryptoJS.enc.Utf8);
+
 
         document.getElementById('message-name').innerText = name;
         document.getElementById('message-content').innerText = message;
