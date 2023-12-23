@@ -186,6 +186,69 @@
 
     <script>
 
+        function isAmazonEnabled() {
+
+          const checkBox = document.getElementById('amazon');
+
+          return checkBox ? checkBox.checked : false;
+
+      }
+
+      function persist() {
+
+          if ( ! window.localStorage )
+              return ;
+
+          var amazon = isAmazonEnabled();
+          var content = document.getElementById( 'input' ).value;
+
+          window.localStorage.setItem( 'amazon', amazon );
+          window.localStorage.setItem( 'input', content );
+
+      }
+
+      function restore() {
+
+          if ( ! window.localStorage )
+              return ;
+
+          var amazon = window.localStorage.getItem( 'amazon' );
+          var content = window.localStorage.getItem( 'input' );
+
+          if (typeof amazon === 'undefined')
+              amazon = true;
+
+          if (typeof content === 'undefined')
+              content = '';
+
+          if ( document.getElementById( 'amazon' ) )
+              document.getElementById( 'amazon' ).checked = amazon;
+
+          document.getElementById( 'input' ).value = content;
+
+      }
+
+      function reset() {
+
+          var result = document.getElementById( 'result' );
+
+          result.classList.add( 'none' );
+          result.classList.remove( 'error' );
+
+      }
+
+      function error(text) {
+
+          var result = document.getElementById( 'result' );
+
+          result.classList.remove( 'none' );
+          result.classList.add( 'error' );
+
+          result.innerText = text;
+
+      }
+
+
       function persist() {
 
           if (!window.localStorage)
@@ -275,7 +338,7 @@
               var key = String(_.random(0x0000, 0xFFFF));
               var encryptedMessage = CryptoJS.AES.encrypt(message.message, key);
 
-              var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'christmas_message.html';
+              var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
               var linkQueryString = '?name=' + encodeURIComponent(message.name) + '&key=' + encodeURIComponent(key) + '&message=' + encodeURIComponent(encryptedMessage);
 
               tdName.innerText = message.name;
@@ -286,6 +349,26 @@
 
           }
 
+
+      }
+
+      function updateAmazon() {
+
+        var result = document.getElementById( 'result' );
+        var links = result.getElementsByTagName( 'a' );
+
+        for ( var t = 0; t < links.length; ++t ) {
+
+            var link = links[t];
+
+            if ( isAmazonEnabled() )
+                link.href += '&extra=1';
+            else
+                link.href = link.href.replace( /&extra=[01]/, '' );
+
+            link.innerText = link.href;
+
+        }
       }
 
       function generate(e) {
