@@ -82,30 +82,10 @@
             font-size: 40px;
             background-color: #EA1212;
             color: #FFFFFF;
-            cursor: pointer; /* Add cursor style */
-        }
-
-        .generate:focus {
-            border-color: #E6E020;
-            outline: none;
-        }
-
-        /* Style for the "Add Friend" button */
-        .add-friend {
-            display: block;
-            margin-top: 20px;
-            flex: none;
-            height: 40px; /* Adjust the height as needed */
-            border: 2px solid #0CB50C;
-            border-radius: 5px;
-            font-family: inherit;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: #FFFFFF;
             cursor: pointer;
         }
 
-        .add-friend:focus {
+        .generate:focus {
             border-color: #E6E020;
             outline: none;
         }
@@ -185,18 +165,30 @@
             var inputContainer = document.createElement('div');
             inputContainer.className = 'input-container';
 
-            var label = document.createElement('label');
-            label.htmlFor = 'friend' + friendCount;
-            label.innerText = 'Friend ' + friendCount + ':';
+            var nameLabel = document.createElement('label');
+            nameLabel.htmlFor = 'friendName' + friendCount;
+            nameLabel.innerText = 'Friend ' + friendCount + ' Name:';
 
-            var input = document.createElement('input');
-            input.type = 'text';
-            input.id = 'friend' + friendCount;
-            input.className = 'input';
-            input.placeholder = 'Enter message for Friend ' + friendCount;
+            var nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.id = 'friendName' + friendCount;
+            nameInput.className = 'input';
+            nameInput.placeholder = 'Enter name for Friend ' + friendCount;
 
-            inputContainer.appendChild(label);
-            inputContainer.appendChild(input);
+            var messageLabel = document.createElement('label');
+            messageLabel.htmlFor = 'friendMessage' + friendCount;
+            messageLabel.innerText = 'Friend ' + friendCount + ' Message:';
+
+            var messageInput = document.createElement('input');
+            messageInput.type = 'text';
+            messageInput.id = 'friendMessage' + friendCount;
+            messageInput.className = 'input';
+            messageInput.placeholder = 'Enter message for Friend ' + friendCount;
+
+            inputContainer.appendChild(nameLabel);
+            inputContainer.appendChild(nameInput);
+            inputContainer.appendChild(messageLabel);
+            inputContainer.appendChild(messageInput);
             friendContainer.appendChild(inputContainer);
         }
 
@@ -205,8 +197,11 @@
                 return;
 
             for (var i = 1; i <= friendCount; i++) {
-                var friendMessage = document.getElementById('friend' + i).value;
-                window.localStorage.setItem('friend' + i, friendMessage);
+                var friendName = document.getElementById('friendName' + i).value;
+                var friendMessage = document.getElementById('friendMessage' + i).value;
+
+                window.localStorage.setItem('friendName' + i, friendName);
+                window.localStorage.setItem('friendMessage' + i, friendMessage);
             }
         }
 
@@ -215,11 +210,19 @@
                 return;
 
             for (var i = 1; i <= friendCount; i++) {
-                var friendMessage = window.localStorage.getItem('friend' + i);
+                var friendName = window.localStorage.getItem('friendName' + i);
+                var friendMessage = window.localStorage.getItem('friendMessage' + i);
+
+                if (friendName === null) {
+                    friendName = '';
+                }
+
                 if (friendMessage === null) {
                     friendMessage = '';
                 }
-                document.getElementById('friend' + i).value = friendMessage;
+
+                document.getElementById('friendName' + i).value = friendName;
+                document.getElementById('friendMessage' + i).value = friendMessage;
             }
         }
 
@@ -284,9 +287,11 @@
             var messages = [];
 
             for (var i = 1; i <= friendCount; i++) {
-                var friendMessage = document.getElementById('friend' + i).value;
+                var friendName = document.getElementById('friendName' + i).value;
+                var friendMessage = document.getElementById('friendMessage' + i).value;
+
                 if (friendMessage.trim() !== '') {
-                    messages.push({ name: 'Friend ' + i, message: friendMessage });
+                    messages.push({ name: friendName, message: friendMessage });
                 }
             }
 
