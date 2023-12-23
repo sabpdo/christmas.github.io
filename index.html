@@ -168,16 +168,10 @@
         </div>
 
         <form id="form" class="part">
-            <div class="input-container">
-                <label for="friend1">Friend 1:</label>
-                <input type="text" id="friend1" class="input" placeholder="Enter message for Friend 1" />
+            <div id="friendInputs">
+                <!-- Friend input containers will be dynamically added here -->
             </div>
-            <div class="input-container">
-                <label for="friend2">Friend 2:</label>
-                <input type="text" id="friend2" class="input" placeholder="Enter message for Friend 2" />
-            </div>
-            <!-- Add more input containers for each friend as needed -->
-
+            <button type="button" onclick="addFriendInput()">Add Friend</button>
             <button type="submit" class="generate">Generate Messages</button>
             <div id="result" class="result none"></div>
         </form>
@@ -185,226 +179,130 @@
     </div>
 
     <script>
-
-        function isAmazonEnabled() {
-
-          const checkBox = document.getElementById('amazon');
-
-          return checkBox ? checkBox.checked : false;
-
-      }
-
-      function persist() {
-
-          if ( ! window.localStorage )
-              return ;
-
-          var amazon = isAmazonEnabled();
-          var content = document.getElementById( 'input' ).value;
-
-          window.localStorage.setItem( 'amazon', amazon );
-          window.localStorage.setItem( 'input', content );
-
-      }
-
-      function restore() {
-
-          if ( ! window.localStorage )
-              return ;
-
-          var amazon = window.localStorage.getItem( 'amazon' );
-          var content = window.localStorage.getItem( 'input' );
-
-          if (typeof amazon === 'undefined')
-              amazon = true;
-
-          if (typeof content === 'undefined')
-              content = '';
-
-          if ( document.getElementById( 'amazon' ) )
-              document.getElementById( 'amazon' ).checked = amazon;
-
-          document.getElementById( 'input' ).value = content;
-
-      }
-
-      function reset() {
-
-          var result = document.getElementById( 'result' );
-
-          result.classList.add( 'none' );
-          result.classList.remove( 'error' );
-
-      }
-
-      function error(text) {
-
-          var result = document.getElementById( 'result' );
-
-          result.classList.remove( 'none' );
-          result.classList.add( 'error' );
-
-          result.innerText = text;
-
-      }
-
-
-      function persist() {
-
-          if (!window.localStorage)
-              return;
-
-          var friend1 = document.getElementById('friend1').value;
-          var friend2 = document.getElementById('friend2').value;
-          // Add more variables for each friend as needed
-
-          window.localStorage.setItem('friend1', friend1);
-          window.localStorage.setItem('friend2', friend2);
-          // Add more localStorage.setItem for each friend as needed
-      }
-
-      function restore() {
-
-          if (!window.localStorage)
-              return;
-
-          var friend1 = window.localStorage.getItem('friend1');
-          var friend2 = window.localStorage.getItem('friend2');
-          // Add more variables for each friend as needed
-
-          if (typeof friend1 === 'undefined')
-              friend1 = '';
-          if (typeof friend2 === 'undefined')
-              friend2 = '';
-          // Add more checks for each friend as needed
-
-          document.getElementById('friend1').value = friend1;
-          document.getElementById('friend2').value = friend2;
-          // Set values for each friend as needed
-      }
-
-      function reset() {
-
-          var result = document.getElementById('result');
-
-          result.classList.add('none');
-          result.classList.remove('error');
-
-      }
-
-      function error(text) {
-
-          var result = document.getElementById('result');
-
-          result.classList.remove('none');
-          result.classList.add('error');
-
-          result.innerText = text;
-
-      }
-
-      function success(messages) {
-
-          var result = document.getElementById('result');
-
-          result.classList.remove('none');
-          result.classList.remove('error');
-
-          result.innerHTML = '';
-
-          var table = document.createElement('table');
-          table.className = 'result-table';
-          result.appendChild(table);
-
-          for (var t = 0, T = messages.length; t < T; ++t) {
-
-              var message = messages[t];
-
-              var tr = document.createElement('tr');
-              tr.className = 'result-row';
-              table.appendChild(tr);
-
-              var tdName = document.createElement('td');
-              tdName.className = 'result-name';
-              tr.appendChild(tdName);
-
-              var tdLink = document.createElement('td');
-              tdLink.className = 'result-link';
-              tr.appendChild(tdLink);
-
-              var link = document.createElement('a');
-              tdLink.appendChild(link);
-
-              var key = String(_.random(0x0000, 0xFFFF));
-              var encryptedMessage = CryptoJS.AES.encrypt(message.message, key);
-
-              var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
-              var linkQueryString = '?name=' + encodeURIComponent(message.name) + '&key=' + encodeURIComponent(key) + '&message=' + encodeURIComponent(encryptedMessage);
-
-              tdName.innerText = message.name;
-
-              link.href = window.location.protocol + '//' + window.location.host + linkPath + linkQueryString;
-              link.target = '_blank';
-              link.innerText = link.href;
-
-          }
-
-
-      }
-
-      function updateAmazon() {
-
-        var result = document.getElementById( 'result' );
-        var links = result.getElementsByTagName( 'a' );
-
-        for ( var t = 0; t < links.length; ++t ) {
-
-            var link = links[t];
-
-            if ( isAmazonEnabled() )
-                link.href += '&extra=1';
-            else
-                link.href = link.href.replace( /&extra=[01]/, '' );
-
-            link.innerText = link.href;
-
+        var friendCount = 2; // Initial number of friends
+
+        function addFriendInput() {
+            friendCount++;
+            var friendContainer = document.getElementById('friendInputs');
+
+            var inputContainer = document.createElement('div');
+            inputContainer.className = 'input-container';
+
+            var label = document.createElement('label');
+            label.htmlFor = 'friend' + friendCount;
+            label.innerText = 'Friend ' + friendCount + ':';
+
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.id = 'friend' + friendCount;
+            input.className = 'input';
+            input.placeholder = 'Enter message for Friend ' + friendCount;
+
+            inputContainer.appendChild(label);
+            inputContainer.appendChild(input);
+            friendContainer.appendChild(inputContainer);
         }
-      }
 
-      function generate(e) {
+        function persist() {
+            if (!window.localStorage)
+                return;
 
-          e.preventDefault();
+            for (var i = 1; i <= friendCount; i++) {
+                var friendMessage = document.getElementById('friend' + i).value;
+                window.localStorage.setItem('friend' + i, friendMessage);
+            }
+        }
 
-          var friend1 = document.getElementById('friend1').value;
-          var friend2 = document.getElementById('friend2').value;
-          // Add more variables for each friend as needed
+        function restore() {
+            if (!window.localStorage)
+                return;
 
-          var messages = [];
+            for (var i = 1; i <= friendCount; i++) {
+                var friendMessage = window.localStorage.getItem('friend' + i);
+                if (typeof friendMessage === 'undefined')
+                    friendMessage = '';
+                document.getElementById('friend' + i).value = friendMessage;
+            }
+        }
 
-          if (friend1.trim() !== '') {
-              messages.push({ name: 'Friend 1', message: friend1 });
-          }
+        function reset() {
+            var result = document.getElementById('result');
+            result.classList.add('none');
+            result.classList.remove('error');
+        }
 
-          if (friend2.trim() !== '') {
-              messages.push({ name: 'Friend 2', message: friend2 });
-          }
-          // Add more conditions for each friend as needed
+        function error(text) {
+            var result = document.getElementById('result');
+            result.classList.remove('none');
+            result.classList.add('error');
+            result.innerText = text;
+        }
 
-          if (messages.length === 0)
-              return reset();
+        function success(messages) {
+            var result = document.getElementById('result');
+            result.classList.remove('none');
+            result.classList.remove('error');
+            result.innerHTML = '';
 
-          success(messages);
+            var table = document.createElement('table');
+            table.className = 'result-table';
+            result.appendChild(table);
 
-      }
+            for (var t = 0, T = messages.length; t < T; ++t) {
+                var message = messages[t];
+
+                var tr = document.createElement('tr');
+                tr.className = 'result-row';
+                table.appendChild(tr);
+
+                var tdName = document.createElement('td');
+                tdName.className = 'result-name';
+                tr.appendChild(tdName);
+
+                var tdLink = document.createElement('td');
+                tdLink.className = 'result-link';
+                tr.appendChild(tdLink);
+
+                var link = document.createElement('a');
+                tdLink.appendChild(link);
+
+                var key = String(_.random(0x0000, 0xFFFF));
+                var encryptedMessage = CryptoJS.AES.encrypt(message.message, key);
+
+                var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
+                var linkQueryString = '?name=' + encodeURIComponent(message.name) + '&key=' + encodeURIComponent(key) + '&message=' + encodeURIComponent(encryptedMessage);
+
+                tdName.innerText = message.name;
+
+                link.href = window.location.protocol + '//' + window.location.host + linkPath + linkQueryString;
+                link.target = '_blank';
+                link.innerText = link.href;
+            }
+        }
+
+        function generate(e) {
+            e.preventDefault();
+
+            var messages = [];
+
+            for (var i = 1; i <= friendCount; i++) {
+                var friendMessage = document.getElementById('friend' + i).value;
+                if (friendMessage.trim() !== '') {
+                    messages.push({ name: 'Friend ' + i, message: friendMessage });
+                }
+            }
+
+            if (messages.length === 0)
+                return reset();
+
+            success(messages);
+        }
 
     </script>
 
     <script>
-
         document.getElementById('form').addEventListener('submit', generate);
-
         restore();
-
     </script>
 
 </body>
