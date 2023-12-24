@@ -10,13 +10,111 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
 
     <style>
-        /* Your existing styles remain unchanged */
 
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body, .main {
+            margin: 0;
+
+            width: 100%;
+            height: 100%;
+
+            padding: 0;
+        }
+
+        body {
+            background: url(./assets/snow.png), url(./assets/santa.png), url(./assets/snow.png), radial-gradient(#FB3B3B, #EF3D3D);
+            background-repeat: repeat, no-repeat, repeat, no-repeat;
+
+            animation-name: snow;
+            animation-duration: 5s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+
+            font-family: 'Comic Sans MS';
+        }
+
+        @keyframes snow {
+            from { background-position: 130px 40px, bottom right, 0 0, 0 0; }
+            to { background-position: 130px 640px, bottom right, 0 300px, 0 0; }
+        }
+
+        .spirit-of-christmas {
+            display: block;
+
+            position: absolute;
+            bottom: 0;
+            left: 0;
+
+            padding: 20px;
+
+            font-size: 10px;
+            text-decoration: none;
+
+            color: #FFFFFF;
+        }
+
+        .main {
+            display: flex;
+        }
+
+        .background {
+            position: absolute;
+
+            left: 0;
+            bottom: 0;
+        }
+
+        .wrapper {
+            margin: auto;
+            padding: 20px;
+
+            background: repeating-linear-gradient(
+                45deg,
+                #5CC48A,
+                #5CC48A 30px,
+                #FFFFFF 30px,
+                #FFFFFF 60px,
+                #EF3D3D 60px,
+                #EF3D3D 90px,
+                #FFFFFF 90px,
+                #FFFFFF 120px
+            );
+
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+        }
+
+        .content {
+            padding: 40px;
+
+            background: #ffffff;
+
+            text-align: center;
+        }
+
+        .title {
+            font-size: 30px;
+        }
+
+        #message-name {
+            font-size: 30px;
+        }
+
+        #message-content {
+            margin-bottom: 20px;
+
+            font-size: 20px;
+        }
+
+        
         #author-name {
             font-size: 20px;
             font-weight: bold;
             color: #EF3D3D; /* Adjust the color as needed */
         }
+
     </style>
 
     <script>
@@ -34,6 +132,7 @@
         document.getElementById('author-name').innerText = name; // Assuming 'name' is the author's name
     </script>
 
+
 </head>
 
 <body>
@@ -43,10 +142,15 @@
         <div class="wrapper">
             <div class="content">
 
-                <div class="title"> Hi <span id="message-name"></span>! Merry Christmas &#127794;</div>
+                <div class="title"> Hi <span id="message-name"></span>! Merry Christmas &#127794;
+                </div>
+                <script>document.getElementById('message-name').innerText = name</script>
 
                 <div class="message">
                     <div id="message-content"></div>
+                    <script>
+                        document.getElementById('message-content').innerText = message;
+                    </script>
                 </div>
 
                 <div class="title">with &hearts;, <span id="author-name"></span></div>
