@@ -424,8 +424,8 @@
 
                 var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
                 var linkQueryString =
-                    '?name=' + encodeURIComponent(message.name) +
-                    '&yourName=' + encodeURIComponent(message.yourName) +
+                    '?name=' + message.name +
+                    '&yourName=' + message.yourName +
                     '&key=' + encodeURIComponent(key) +
                     '&message=' + encodeURIComponent(encryptedMessage);
 
