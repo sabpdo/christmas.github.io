@@ -117,22 +117,6 @@
 
     </style>
 
-    <script>
-        var queryString = location.search.slice(1);
-        var params = new URLSearchParams(queryString);
-
-        var name = params.get('name');
-        var authorName = params.get('yourName');
-        var key = params.get('key');
-        var encryptedMessage = params.get('message');
-
-        var message = CryptoJS.AES.decrypt(encryptedMessage, key).toString(CryptoJS.enc.Utf8);
-
-        document.getElementById('message-name').innerText = name;
-        document.getElementById('message-content').innerText = message;
-        document.getElementById('author-name').innerText = authorName;
-    </script>
-
 
 </head>
 
@@ -156,6 +140,23 @@
         </div>
 
     </div>
+
+    <script>
+        var queryString = location.search.slice(1);
+        var params = new URLSearchParams(queryString);
+
+        var name = params.get('name');
+        var authorName = params.get('yourName');
+        var key = params.get('key');
+        var encryptedMessage = params.get('message');
+
+        var message = CryptoJS.AES.decrypt(encryptedMessage, key).toString(CryptoJS.enc.Utf8);
+
+        document.getElementById('message-name').innerText = name;
+        document.getElementById('message-content').innerText = message;
+        document.getElementById('author-name').innerText = authorName;
+    </script>
+
 
 </body>
 
