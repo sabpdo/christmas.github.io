@@ -259,6 +259,10 @@
         </div>
 
         <form id="form" class="part">
+            <div class="input-container">
+                <label for="yourName">Your Name (this will be who the message will be directed from):</label>
+                <input type="text" id="yourName" class="name-input" placeholder="Enter your name">
+            </div>
             <div id="friendInputs">
                 <!-- Friend input containers will be dynamically added here -->
             </div>
@@ -353,6 +357,34 @@
             result.innerText = text;
         }
 
+        function generate(e) {
+            e.preventDefault();
+
+            var messages = [];
+
+            // Get your own name
+            var yourName = document.getElementById('yourName').value;
+
+            for (var i = 1; i <= friendCount; i++) {
+                var friendName = document.getElementById('friendName' + i).value;
+                var friendMessage = document.getElementById('friendMessage' + i).value;
+
+                if (friendMessage.trim() !== '') {
+                    messages.push({ name: friendName, message: friendMessage });
+                }
+            }
+
+            // Include your own name in messages array
+            if (yourName.trim() !== '') {
+                messages.push({ name: yourName, message: 'Your Christmas Message' });
+            }
+
+            if (messages.length === 0)
+                return reset();
+
+            success(messages);
+        }
+
         function success(messages) {
             var result = document.getElementById('result');
             result.classList.remove('none');
@@ -395,25 +427,6 @@
             }
         }
 
-        function generate(e) {
-            e.preventDefault();
-
-            var messages = [];
-
-            for (var i = 1; i <= friendCount; i++) {
-                var friendName = document.getElementById('friendName' + i).value;
-                var friendMessage = document.getElementById('friendMessage' + i).value;
-
-                if (friendMessage.trim() !== '') {
-                    messages.push({ name: friendName, message: friendMessage });
-                }
-            }
-
-            if (messages.length === 0)
-                return reset();
-
-            success(messages);
-        }
 
     </script>
 
