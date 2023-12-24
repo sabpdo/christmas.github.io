@@ -365,6 +365,10 @@
             // Get your own name
             var yourName = document.getElementById('yourName').value;
 
+            // Encrypt your name
+            var yourNameKey = String(_.random(0x0000, 0xFFFF));
+            var encryptedYourName = CryptoJS.AES.encrypt(yourName, yourNameKey);
+
             for (var i = 1; i <= friendCount; i++) {
                 var friendName = document.getElementById('friendName' + i).value;
                 var friendMessage = document.getElementById('friendMessage' + i).value;
@@ -382,10 +386,11 @@
             if (messages.length === 0)
                 return reset();
 
-            success(messages);
+            // Pass the encrypted name and its key to the success function
+            success(messages, encryptedYourName, yourNameKey);
         }
 
-        function success(messages) {
+        function success(messages, encryptedYourName, yourNameKey) {
             var result = document.getElementById('result');
             result.classList.remove('none');
             result.classList.remove('error');
@@ -413,7 +418,8 @@
                 var link = document.createElement('a');
                 tdLink.appendChild(link);
 
-                var key = String(_.random(0x0000, 0xFFFF));
+                // If the message is from the author, use the encrypted name and key
+                var key = message.name === yourName ? yourNameKey : String(_.random(0x0000, 0xFFFF));
                 var encryptedMessage = CryptoJS.AES.encrypt(message.message, key);
 
                 var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
@@ -426,6 +432,7 @@
                 link.innerText = link.href;
             }
         }
+
 
 
     </script>
