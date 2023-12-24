@@ -88,6 +88,12 @@
             white-space: pre-wrap; /* Enable line breaks */
         }
 
+        /* Additional style to adjust the textarea height when it has content */
+        .message-input.has-content {
+            height: auto;
+            min-height: 150px; /* Set a minimum height */
+        }
+
 
         .message-input:focus {
             border-color: #e74c3c; /* Highlight color on focus */
@@ -270,6 +276,12 @@
     <script>
         var friendCount = 0; // Initial number of friends
 
+        function updateTextareaClass() {
+            var messageInput = document.getElementById('friendMessage1');
+            messageInput.classList.toggle('has-content', messageInput.value.trim() !== '');
+        }
+
+
         function addFriendInput() {
             friendCount++;
             var friendContainer = document.getElementById('friendInputs');
@@ -291,11 +303,11 @@
             messageLabel.htmlFor = 'friendMessage' + friendCount;
             messageLabel.innerText = 'Friend ' + friendCount + ' Message:';
 
-            var messageInput = document.createElement('input');
-            messageInput.type = 'text';
+            var messageInput = document.createElement('textarea'); // Change here
             messageInput.id = 'friendMessage' + friendCount;
             messageInput.className = 'message-input';
             messageInput.placeholder = 'Enter message for Friend ' + friendCount;
+            messageInput.addEventListener('input', updateTextareaClass); // Add this line
 
             inputContainer.appendChild(nameLabel);
             inputContainer.appendChild(nameInput);
@@ -303,6 +315,7 @@
             inputContainer.appendChild(messageInput);
             friendContainer.appendChild(inputContainer);
         }
+
 
         function persist() {
             if (!window.localStorage)
