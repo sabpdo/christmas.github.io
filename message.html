@@ -129,9 +129,8 @@
         var message = CryptoJS.AES.decrypt(encryptedMessage, key).toString(CryptoJS.enc.Utf8);
 
         document.getElementById('message-name').innerText = name;
-        document.getElementById('author-name').innerText = authorName;
         document.getElementById('message-content').innerText = message;
-        document.getElementById('author-name').innerText = name; // Assuming 'name' is the author's name
+        document.getElementById('author-name').innerText = authorName;
     </script>
 
 
@@ -146,13 +145,9 @@
 
                 <div class="title"> Hi <span id="message-name"></span>! Merry Christmas &#127794;
                 </div>
-                <script>document.getElementById('message-name').innerText = name</script>
 
                 <div class="message">
                     <div id="message-content"></div>
-                    <script>
-                        document.getElementById('message-content').innerText = message;
-                    </script>
                 </div>
 
                 <div class="title">with &hearts;, <span id="author-name"></span></div>

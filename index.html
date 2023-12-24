@@ -358,84 +358,85 @@
         }
 
         function generate(e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            var messages = [];
+    var messages = [];
 
-            // Get your own name
-            var yourName = document.getElementById('yourName').value;
+    // Get your own name
+    var yourName = document.getElementById('yourName').value;
 
-            for (var i = 1; i <= friendCount; i++) {
-                var friendName = document.getElementById('friendName' + i).value;
-                var friendMessage = document.getElementById('friendMessage' + i).value;
+    for (var i = 1; i <= friendCount; i++) {
+        var friendName = document.getElementById('friendName' + i).value;
+        var friendMessage = document.getElementById('friendMessage' + i).value;
 
-                if (friendMessage.trim() !== '') {
-                    // Encrypt friend's name, your name, and message with the same key
-                    var encryptionKey = String(_.random(0x0000, 0xFFFF));
-                    var encryptedFriendName = CryptoJS.AES.encrypt(friendName, encryptionKey);
-                    var encryptedYourName = CryptoJS.AES.encrypt(yourName, encryptionKey);
-                    var encryptedFriendMessage = CryptoJS.AES.encrypt(friendMessage, encryptionKey);
+        if (friendMessage.trim() !== '') {
+            // Encrypt friend's name, your name, and message with the same key
+            var encryptionKey = String(_.random(0x0000, 0xFFFF));
+            var encryptedFriendName = CryptoJS.AES.encrypt(friendName, encryptionKey);
+            var encryptedYourName = CryptoJS.AES.encrypt(yourName, encryptionKey);
+            var encryptedFriendMessage = CryptoJS.AES.encrypt(friendMessage, encryptionKey);
 
-                    messages.push({
-                        name: encryptedFriendName.toString(),
-                        yourName: encryptedYourName.toString(),
-                        message: encryptedFriendMessage.toString(),
-                    });
-                }
-            }
-
-            if (messages.length === 0)
-                return reset();
-
-            // Pass the messages array to the success function
-            success(messages);
+            messages.push({
+                name: friendName,
+                yourName: yourName,
+                message: friendMessage,
+                key: encryptionKey,
+            });
         }
+    }
 
-        function success(messages) {
-            var result = document.getElementById('result');
-            result.classList.remove('none');
-            result.classList.remove('error');
-            result.innerHTML = '';
+    if (messages.length === 0)
+        return reset();
 
-            var table = document.createElement('table');
-            table.className = 'result-table';
-            result.appendChild(table);
+    // Pass the messages array to the success function
+    success(messages);
+}
 
-            for (var t = 0, T = messages.length; t < T; ++t) {
-                var message = messages[t];
+function success(messages) {
+    var result = document.getElementById('result');
+    result.classList.remove('none');
+    result.classList.remove('error');
+    result.innerHTML = '';
 
-                var tr = document.createElement('tr');
-                tr.className = 'result-row';
-                table.appendChild(tr);
+    var table = document.createElement('table');
+    table.className = 'result-table';
+    result.appendChild(table);
 
-                var tdName = document.createElement('td');
-                tdName.className = 'result-name';
-                tr.appendChild(tdName);
+    for (var t = 0, T = messages.length; t < T; ++t) {
+        var message = messages[t];
 
-                var tdLink = document.createElement('td');
-                tdLink.className = 'result-link';
-                tr.appendChild(tdLink);
+        var tr = document.createElement('tr');
+        tr.className = 'result-row';
+        table.appendChild(tr);
 
-                var link = document.createElement('a');
-                tdLink.appendChild(link);
+        var tdName = document.createElement('td');
+        tdName.className = 'result-name';
+        tr.appendChild(tdName);
 
-                var key = String(_.random(0x0000, 0xFFFF));
-                var encryptedMessage = CryptoJS.AES.encrypt(message.message, key);
+        var tdLink = document.createElement('td');
+        tdLink.className = 'result-link';
+        tr.appendChild(tdLink);
 
-                var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
-                var linkQueryString =
-                    '?name=' + message.name +
-                    '&yourName=' + message.yourName +
-                    '&key=' + encodeURIComponent(key) +
-                    '&message=' + encodeURIComponent(encryptedMessage);
+        var link = document.createElement('a');
+        tdLink.appendChild(link);
 
-                tdName.innerText = message.name;
+        var encryptedMessage = CryptoJS.AES.encrypt(message.message, message.key);
 
-                link.href = window.location.protocol + '//' + window.location.host + linkPath + linkQueryString;
-                link.target = '_blank';
-                link.innerText = link.href;
-            }
-        }
+        var linkPath = window.location.pathname.replace(/[^/]+$/, '') + 'message.html';
+        var linkQueryString =
+            '?name=' + encodeURIComponent(message.name) +
+            '&yourName=' + encodeURIComponent(message.yourName) +
+            '&key=' + encodeURIComponent(message.key) +
+            '&message=' + encodeURIComponent(encryptedMessage);
+
+        tdName.innerText = message.name;
+
+        link.href = window.location.protocol + '//' + window.location.host + linkPath + linkQueryString;
+        link.target = '_blank';
+        link.innerText = link.href;
+    }
+}
+
 
 
 
